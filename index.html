@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
     <style>
       :root {
-        --term-bg: #050a08;
+        --term-bg: #020402;
         --term-text: #00ff41;
         --term-dim: #008f11;
         --term-alert: #ff003c;
@@ -24,64 +24,90 @@
         color: var(--term-text);
       }
       
-      /* CRT Effects */
-      .crt-overlay {
-        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-        background-size: 100% 2px, 3px 100%;
+      /* CRT Scanlines */
+      .scanlines {
+        background: linear-gradient(
+          to bottom,
+          rgba(255,255,255,0),
+          rgba(255,255,255,0) 50%,
+          rgba(0,0,0,0.2) 50%,
+          rgba(0,0,0,0.2)
+        );
+        background-size: 100% 4px;
+        position: absolute;
         pointer-events: none;
-        mix-blend-mode: hard-light;
-      }
-      
-      .scanline {
-        width: 100%;
-        height: 100px;
         z-index: 60;
-        background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(0, 255, 65, 0.04) 50%, rgba(0,0,0,0) 100%);
-        opacity: 0.1;
+        top: 0; left: 0; right: 0; bottom: 0;
+      }
+
+      /* Moving Scanline Bar */
+      .scanline-bar {
+        width: 100%;
+        height: 5px;
+        z-index: 61;
+        background: rgba(0, 255, 65, 0.1);
+        opacity: 0.4;
         position: absolute;
         bottom: 100%;
-        animation: scanline 8s linear infinite;
+        animation: scanline-anim 6s linear infinite;
         pointer-events: none;
       }
-      @keyframes scanline {
-        0% { bottom: 100%; }
-        80% { bottom: 100%; }
-        100% { bottom: -100px; }
+      @keyframes scanline-anim {
+        0% { top: -10%; opacity: 0; }
+        10% { opacity: 0.4; }
+        90% { opacity: 0.4; }
+        100% { top: 110%; opacity: 0; }
       }
 
-      .glitch-text:hover {
-        animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-        color: var(--term-alert);
-        text-shadow: 2px 2px var(--signal-blue);
+      /* Text Glitch */
+      .glitch-text {
+        position: relative;
       }
-      
-      .glitch-active {
-         animation: glitch-anim 0.3s infinite;
+      .glitch-text::before,
+      .glitch-text::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
       }
-
-      @keyframes glitch-skew {
-        0% { transform: translate(0); }
-        20% { transform: translate(-2px, 2px); }
-        40% { transform: translate(-2px, -2px); }
-        60% { transform: translate(2px, 2px); }
-        80% { transform: translate(2px, -2px); }
-        100% { transform: translate(0); }
+      .glitch-text::before {
+        left: 2px;
+        text-shadow: -1px 0 #ff00c1;
+        clip: rect(44px, 450px, 56px, 0);
+        animation: glitch-anim 5s infinite linear alternate-reverse;
+      }
+      .glitch-text::after {
+        left: -2px;
+        text-shadow: -1px 0 #00fff9;
+        clip: rect(44px, 450px, 56px, 0);
+        animation: glitch-anim2 5s infinite linear alternate-reverse;
       }
 
       @keyframes glitch-anim {
-        0% { clip-path: inset(40% 0 61% 0); transform: translate(-2px, 2px); }
-        20% { clip-path: inset(92% 0 1% 0); transform: translate(2px, -2px); }
-        40% { clip-path: inset(43% 0 1% 0); transform: translate(2px, 2px); }
-        60% { clip-path: inset(25% 0 58% 0); transform: translate(-2px, 2px); }
-        80% { clip-path: inset(54% 0 7% 0); transform: translate(2px, -2px); }
-        100% { clip-path: inset(58% 0 43% 0); transform: translate(0); }
+        0% { clip: rect(14px, 9999px, 12px, 0); }
+        5% { clip: rect(68px, 9999px, 1px, 0); }
+        10% { clip: rect(93px, 9999px, 78px, 0); }
+        15% { clip: rect(8px, 9999px, 96px, 0); }
+        20% { clip: rect(11px, 9999px, 69px, 0); }
+        100% { clip: rect(1px, 9999px, 1px, 0); }
+      }
+      @keyframes glitch-anim2 {
+        0% { clip: rect(65px, 9999px, 98px, 0); }
+        5% { clip: rect(20px, 9999px, 17px, 0); }
+        10% { clip: rect(4px, 9999px, 90px, 0); }
+        15% { clip: rect(57px, 9999px, 2px, 0); }
+        20% { clip: rect(39px, 9999px, 83px, 0); }
+        100% { clip: rect(1px, 9999px, 1px, 0); }
       }
 
       .term-text-glow {
         text-shadow: 0 0 5px var(--term-text), 0 0 10px var(--term-dim);
       }
 
-      /* Custom Scrollbar */
+      /* Scrollbar */
       ::-webkit-scrollbar { width: 6px; }
       ::-webkit-scrollbar-track { background: #001100; }
       ::-webkit-scrollbar-thumb { background: #004400; }
