@@ -25,24 +25,33 @@ const SnakeScene: React.FC<SnakeSceneProps> = ({ setScene }) => {
     let food = { x: 5, y: 5 };
 
     const draw = () => {
-      ctx.fillStyle = '#050a08';
+      // BG
+      ctx.fillStyle = '#000';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      ctx.strokeStyle = '#0a1f11';
+      // Grid Lines
+      ctx.strokeStyle = '#002200';
       ctx.lineWidth = 1;
       for(let i=0; i<cols; i++) { ctx.beginPath(); ctx.moveTo(i*grid,0); ctx.lineTo(i*grid, canvas.height); ctx.stroke(); }
       for(let j=0; j<rows; j++) { ctx.beginPath(); ctx.moveTo(0,j*grid); ctx.lineTo(canvas.width, j*grid); ctx.stroke(); }
 
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = '#ff8c00';
-      ctx.fillStyle = '#ff8c00';
-      ctx.fillRect(food.x * grid + 2, food.y * grid + 2, grid - 4, grid - 4);
+      // Food
       ctx.shadowBlur = 0;
+      ctx.fillStyle = '#ff003c'; // Alert Color
+      ctx.fillRect(food.x * grid + 2, food.y * grid + 2, grid - 4, grid - 4);
       
+      // Snake
       snake.forEach((s, i) => {
-        ctx.fillStyle = i === 0 ? '#00ff41' : '#008f11';
+        ctx.fillStyle = i === 0 ? '#00ff41' : '#008f11'; // Terminal Green
+        if(i === 0) {
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#00ff41';
+        } else {
+            ctx.shadowBlur = 0;
+        }
         ctx.fillRect(s.x * grid + 1, s.y * grid + 1, grid - 2, grid - 2);
       });
+      ctx.shadowBlur = 0;
     };
 
     const move = () => {
@@ -70,7 +79,7 @@ const SnakeScene: React.FC<SnakeSceneProps> = ({ setScene }) => {
       else if (e.key === 'ArrowRight' && dir.x === 0) dir = { x: 1, y: 0 };
     };
 
-    const loop = setInterval(move, 100);
+    const loop = setInterval(move, 90);
     document.addEventListener('keydown', handleKeyDown);
     
     const endGame = () => {
@@ -79,7 +88,8 @@ const SnakeScene: React.FC<SnakeSceneProps> = ({ setScene }) => {
         setTimeout(() => setScene('menu'), 3000);
     };
     
-    const timeout = setTimeout(endGame, 30000);
+    // Auto-exit after 45s
+    const timeout = setTimeout(endGame, 45000);
 
     draw();
 
@@ -91,18 +101,18 @@ const SnakeScene: React.FC<SnakeSceneProps> = ({ setScene }) => {
   }, [setScene]);
 
   return (
-    <div className="w-full h-full flex items-center justify-center bg-black relative">
+    <div className="w-full h-full flex items-center justify-center bg-[#050505] relative">
        {showOverlay && (
-        <div className="absolute inset-0 bg-black/80 z-20 flex items-center justify-center backdrop-blur-sm">
-            <div className="border border-red-500 bg-black p-8 text-center shadow-[0_0_30px_rgba(255,0,0,0.3)]">
-                <h2 className="text-red-500 font-vt323 text-4xl mb-2">CONNECTION LOST</h2>
-                <p className="text-gray-500 mt-4 text-xs">TRY SECOND PATH</p>
+        <div className="absolute inset-0 bg-black/90 z-20 flex items-center justify-center backdrop-blur-sm">
+            <div className="border-2 border-red-600 bg-black p-8 text-center shadow-[0_0_50px_rgba(255,0,0,0.4)]">
+                <h2 className="text-red-600 font-vt323 text-5xl mb-2 animate-pulse">CONNECTION TERMINATED</h2>
+                <p className="text-red-800 mt-4 text-xs font-mono tracking-widest">RUNTIME_ERROR: STACK_OVERFLOW</p>
             </div>
         </div>
       )}
-      <canvas ref={canvasRef} width={640} height={480} className="rounded border border-green-900/50 shadow-lg bg-[#050a08]" />
-      <div className="absolute top-4 right-4 text-green-900 font-mono text-xs">
-        PROTOCOL: SNAKE_V1
+      <canvas ref={canvasRef} width={640} height={480} className="rounded border border-green-900 shadow-lg bg-[#000]" />
+      <div className="absolute top-6 right-6 text-green-800 font-mono text-xs">
+        > RUNNING SNAKE_v1.0.exe
       </div>
     </div>
   );
