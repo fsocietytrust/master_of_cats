@@ -25,27 +25,30 @@ const SnakeScene: React.FC<SnakeSceneProps> = ({ setScene }) => {
     let food = { x: 5, y: 5 };
 
     const draw = () => {
-      ctx.fillStyle = '#050a08'; // Terminal BG
+      // Terminal BG
+      ctx.fillStyle = '#050a08';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Draw Grid lines (faint)
+      // Grid
       ctx.strokeStyle = '#0a1f11';
       ctx.lineWidth = 1;
       for(let i=0; i<cols; i++) { ctx.beginPath(); ctx.moveTo(i*grid,0); ctx.lineTo(i*grid, canvas.height); ctx.stroke(); }
       for(let j=0; j<rows; j++) { ctx.beginPath(); ctx.moveTo(0,j*grid); ctx.lineTo(canvas.width, j*grid); ctx.stroke(); }
 
+      // Food
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = '#ff8c00';
       ctx.fillStyle = '#ff8c00';
-      ctx.fillRect(food.x * grid + 2, food.y * grid + 2, grid - 4, grid - 4);
+      ctx.fillRect(food.x * grid + 4, food.y * grid + 4, grid - 8, grid - 8);
+      ctx.shadowBlur = 0;
       
+      // Snake
       snake.forEach((s, i) => {
         ctx.fillStyle = i === 0 ? '#00ff41' : '#008f11';
+        if(i === 0) ctx.shadowBlur = 10;
+        if(i === 0) ctx.shadowColor = '#00ff41';
         ctx.fillRect(s.x * grid + 1, s.y * grid + 1, grid - 2, grid - 2);
-        if(i===0) {
-            // Eyes for head
-            ctx.fillStyle = 'black';
-            ctx.fillRect(s.x*grid+4, s.y*grid+4, 4, 4);
-            ctx.fillRect(s.x*grid+12, s.y*grid+4, 4, 4);
-        }
+        ctx.shadowBlur = 0;
       });
     };
 
@@ -65,18 +68,16 @@ const SnakeScene: React.FC<SnakeSceneProps> = ({ setScene }) => {
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Prevent scrolling
       if(['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
           e.preventDefault();
       }
-
       if (e.key === 'ArrowUp' && dir.y === 0) dir = { x: 0, y: -1 };
       else if (e.key === 'ArrowDown' && dir.y === 0) dir = { x: 0, y: 1 };
       else if (e.key === 'ArrowLeft' && dir.x === 0) dir = { x: -1, y: 0 };
       else if (e.key === 'ArrowRight' && dir.x === 0) dir = { x: 1, y: 0 };
     };
 
-    const loop = setInterval(move, 120);
+    const loop = setInterval(move, 100);
     document.addEventListener('keydown', handleKeyDown);
     
     const endGame = () => {
@@ -85,7 +86,6 @@ const SnakeScene: React.FC<SnakeSceneProps> = ({ setScene }) => {
         setTimeout(() => setScene('menu'), 3000);
     };
     
-    // 30s timer
     const timeout = setTimeout(endGame, 30000);
 
     draw();
@@ -102,17 +102,14 @@ const SnakeScene: React.FC<SnakeSceneProps> = ({ setScene }) => {
        {showOverlay && (
         <div className="absolute inset-0 bg-black/80 z-20 flex items-center justify-center backdrop-blur-sm">
             <div className="border border-red-500 bg-black p-8 text-center shadow-[0_0_30px_rgba(255,0,0,0.3)]">
-                <h2 className="text-red-500 font-vt323 text-4xl mb-2 animate-pulse">ACCESS DENIED</h2>
-                <p className="text-red-700 font-mono text-sm">SECURITY PROTOCOL FAILED</p>
-                <p className="text-gray-500 mt-4 text-xs">REDIRECTING...</p>
+                <h2 className="text-red-500 font-vt323 text-4xl mb-2 animate-pulse">CONNECTION LOST</h2>
+                <p className="text-gray-500 mt-4 text-xs font-mono">DATA STREAM INTERRUPTED</p>
             </div>
         </div>
       )}
-      <canvas ref={canvasRef} width={640} height={480} className="rounded border border-green-900/50 shadow-lg" />
-      
-      {/* Decorative UI around snake */}
+      <canvas ref={canvasRef} width={640} height={480} className="rounded border border-green-900/50 shadow-lg bg-[#050a08]" />
       <div className="absolute top-4 right-4 text-green-900 font-mono text-xs">
-        EXEC: SNAKE.EXE
+        PROTOCOL: SNAKE_V1
       </div>
     </div>
   );
