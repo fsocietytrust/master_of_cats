@@ -59,11 +59,11 @@ const App: React.FC = () => {
   if (!booted) {
     return (
       <div className="w-screen h-screen bg-black flex flex-col items-start justify-end p-10 font-mono text-green-500 text-xs md:text-sm overflow-hidden">
-        <div className="mb-1">> KERNEL_INIT...</div>
-        <div className="mb-1">> LOADING_MODULES [MOTANI_DB]... OK</div>
-        <div className="mb-1">> ESTABLISHING_UPLINK...</div>
-        <div className="mb-1 text-blue-400">> DETECTED_SIGNAL_INTERFERENCE...</div>
-        <div className="text-red-500 animate-pulse">> WARNING: UNSAFE CONNECTION</div>
+        <div className="mb-1"> KERNEL_INIT...</div>
+        <div className="mb-1"> LOADING_MODULES [MOTANI_DB]... OK</div>
+        <div className="mb-1"> ESTABLISHING_UPLINK...</div>
+        <div className="mb-1 text-blue-400"> DETECTED_SIGNAL_INTERFERENCE...</div>
+        <div className="text-red-500 animate-pulse"> WARNING: UNSAFE CONNECTION</div>
         <div className="animate-pulse text-white mt-2">_</div>
       </div>
     );
