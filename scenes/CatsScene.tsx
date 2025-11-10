@@ -55,10 +55,10 @@ const GameEntity = forwardRef<HTMLDivElement, {
             draggable={false}
           />
         ) : (
-          <div className={`w-full h-full border flex items-center justify-center text-[10px] font-bold bg-black/50 backdrop-blur-sm
-             ${type === 'motan' ? 'border-cyan-500 text-cyan-500' : 'border-orange-800 text-orange-800'}`}>
-             {type === 'motan' ? 'SIG' : 'OBJ'}
-          </div>
+         <div className="text-cyan-300 font-mono text-xl select-text tracking-widest drop-shadow-[0_0_5px_cyan]">
+  FLAG&#123;CAT_18_FOUND&#125;
+</div>
+
         )}
       </div>
     </div>
