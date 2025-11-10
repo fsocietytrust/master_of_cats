@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useCallback, forwardRef } from 'react';
 import type { Scene } from '../App';
 import type { Motan, Obiect } from '../types';
-import { Cat, Box, Activity, CheckCircle2, AlertTriangle, Info, Minus, ChevronUp, Router } from 'lucide-react';
+import { Cat, Box, Wifi, Activity, CheckCircle2, AlertTriangle, Info, Minus, ChevronUp, Router } from 'lucide-react';
 
 interface CatsSceneProps {
   setScene: (scene: Scene) => void;
